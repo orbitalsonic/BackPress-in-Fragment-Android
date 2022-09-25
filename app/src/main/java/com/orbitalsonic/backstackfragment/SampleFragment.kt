@@ -15,7 +15,7 @@ import com.orbitalsonic.backstackfragment.databinding.FragmentSampleBinding
 class SampleFragment :  Fragment()  {
 
     private lateinit var binding:FragmentSampleBinding
-    private lateinit var callback: OnBackPressedCallback
+    private var callback: OnBackPressedCallback? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,18 +35,18 @@ class SampleFragment :  Fragment()  {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pandaBackPress()
+        sonicBackPress()
 
     }
 
-    private fun pandaBackPress() {
+    private fun sonicBackPress() {
         callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 onBack()
             }
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback!!)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -62,6 +62,11 @@ class SampleFragment :  Fragment()  {
 
     private fun onBack(){
         findNavController().popBackStack()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        callback?.remove()
     }
 
 }
